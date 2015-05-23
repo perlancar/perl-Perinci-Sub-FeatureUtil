@@ -1,5 +1,8 @@
 package Perinci::Sub::FeatureUtil;
 
+# DATE
+# VERSION
+
 use 5.010001;
 use strict;
 use warnings;
@@ -10,8 +13,6 @@ our @EXPORT_OK = qw(
                        declare_function_feature
                );
 
-# VERSION
-
 sub declare_function_feature {
     my %args   = @_;
     my $name   = $args{name}   or die "Please specify feature's name";
@@ -20,15 +21,15 @@ sub declare_function_feature {
     $name =~ /\A\w+\z/
         or die "Invalid syntax on feature's name, please use alphanums only";
 
-    require Rinci::Schema;
-    # XXX merge first or use Perinci::Object, less fragile
-    my $ff = $Rinci::Schema::function->[1]{"[merge+]keys"}{features}
+    require Sah::Schema::Rinci;
+
+    my $sch = $Sah::Schema::Rinci::SCHEMAS{rinci_function}
         or die "BUG: Schema structure changed (1)";
-    $ff->[1]{keys}
+    my $props = $sch->[1]{_prop}
         or die "BUG: Schema structure changed (2)";
-    $ff->[1]{keys}{$name}
-        and die "Feature '$name' is already declared";
-    $ff->[1]{keys}{$name} = $args{schema};
+    $props->{features}{_keys}{$name}
+        and die "Feature property '$name' already defined in schema";
+    $props->{features}{_keys}{$name} = {};
 }
 
 1;
