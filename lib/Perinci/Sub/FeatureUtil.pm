@@ -21,12 +21,11 @@ sub declare_function_feature {
     $name =~ /\A\w+\z/
         or die "Invalid syntax on feature's name, please use alphanums only";
 
-    require Sah::Schema::Rinci;
+    require Sah::Schema::rinci::function_meta;
 
-    my $sch = $Sah::Schema::Rinci::SCHEMAS{rinci_function}
-        or die "BUG: Schema structure changed (1)";
+    my $sch = $Sah::Schema::rinci::function_meta::schema;
     my $props = $sch->[1]{_prop}
-        or die "BUG: Schema structure changed (2)";
+        or die "BUG: Schema structure changed (1a)";
     $props->{features}{_keys}{$name}
         and die "Feature property '$name' already defined in schema";
     $props->{features}{_keys}{$name} = {};
